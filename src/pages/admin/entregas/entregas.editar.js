@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import MenuAdmin from '../../../components/menu-admin';
 import Copy from '../../../components/copyright';
 import { useParams } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 import api from '../../../services/api'
 
 const useStyles = makeStyles((theme) => ({
@@ -25,43 +25,48 @@ const useStyles = makeStyles((theme) => ({
 
 //Caminho -> http://localhost:3000/entregas/cadastro-de-entregas
 
-export default function Usuario_Cadastrar() {
+export default function Entregas_Atualizar(props) {
   const classes = useStyles();
-  const [nome_Cliente, setNome_cliente] = useState('');
-  const [data_Entrega, setData_entrega] = useState('');
-  const [P_Partida, setP_Partida] = useState('');
-  const [P_Destino, setP_Destino] = useState('');
+  const [nomeCliente, setNomeCliente] = useState('');
+  const [dataEntrega, setDataEntrega] = useState('');
+  const [pontoPartida, setPontoPartida] = useState('');
+  const [pontoDestino, setPontoDestino] = useState('');
 
   const { idEntrega } = useParams();
 
   useEffect(()=>{
     async function getEntrega(){
-      var response = await api.get('entregas/'+idEntrega)
-      setNome_cliente(response.data.nomeCliente);
-      setData_entrega(response.data.dataEntrega);
-      setP_Partida(response.data.pontoPartida);
-      setP_Destino(response.data.pontoDestino);
+      const response = await api.get(`entregas/${idEntrega}`)
+      setNomeCliente(response.data.nomeCliente);
+      setDataEntrega(response.data.dataEntrega);
+      setPontoPartida(response.data.pontoPartida);
+      setPontoDestino(response.data.pontoDestino);
     }
     getEntrega();
   },[])
 
   const handleSubmit = async ()=>{
     const data = {
-      nomeCliente:nome_Cliente,
-      dataEntrega:data_Entrega,
-      pontoPartida:P_Partida,
-      pontoDestino:P_Destino,
+      nomeCliente:nomeCliente,
+      dataEntrega:dataEntrega,
+      pontoPartida:pontoPartida,
+      pontoDestino:pontoDestino,
       _id: idEntrega}
 
-      console.log(data)
-
+      if (nomeCliente !== '' &&
+      dataEntrega !== '' && 
+      pontoPartida !== '' &&
+      pontoDestino !== '') {
         const response = await api.put('/entregas',data);
-        console.log(response)
         if(response.status===200){
-          window.location.href='/entregas'
+          toast.success("Atualizado com sucesso!");
+          props.history.push('/entregas')
         }else{
-          alert('Erro ao atualizar a entrega!')
+          toast.error("Erro ao atualizar a entrega!");
         }
+      }else{
+      toast.warn("Por favor, preencher todas as informações!");
+      }
   }
 
   return (
@@ -84,8 +89,8 @@ export default function Usuario_Cadastrar() {
                       label="Nome do cliente"
                       fullWidth
                       autoComplete="Nome-do-cliente"
-                      value={nome_Cliente}
-                      onChange={e=>setNome_cliente(e.target.value)}
+                      value={nomeCliente}
+                      onChange={e=>setNomeCliente(e.target.value)}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -100,8 +105,8 @@ export default function Usuario_Cadastrar() {
                         shrink: true,
                       }}
                       autoComplete="data-de-entrega"
-                      value={data_Entrega}
-                      onChange={e=>setData_entrega(e.target.value)}
+                      value={dataEntrega}
+                      onChange={e=>setDataEntrega(e.target.value)}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -112,8 +117,8 @@ export default function Usuario_Cadastrar() {
                       label="Ponto de Partida"
                       fullWidth
                       autoComplete="Ponto-de-partida"
-                      value={P_Partida}
-                      onChange={e=>setP_Partida(e.target.value)}
+                      value={pontoPartida}
+                      onChange={e=>setPontoPartida(e.target.value)}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -124,8 +129,8 @@ export default function Usuario_Cadastrar() {
                       label="Ponto de Destino"
                       fullWidth
                       autoComplete="Ponto-de-Destino"
-                      value={P_Destino}
-                      onChange={e=>setP_Destino(e.target.value)}
+                      value={pontoDestino}
+                      onChange={e=>setPontoDestino(e.target.value)}
                     />
                   </Grid>
                   <Grid>

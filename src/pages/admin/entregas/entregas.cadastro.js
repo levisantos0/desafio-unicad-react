@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 //Caminho -> http://localhost:3000/entregas/cadastar
 
-export default function Usuario_Cadastrar() {
+export default function EntregasCadastrar() {
   const classes = useStyles();
   const [nomeCliente, setNomeCliente] = useState('');
   const [dataEntrega, setDataEntrega] = useState('');
