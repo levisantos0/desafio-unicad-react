@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper'
-
 import MenuAdmin from '../../../components/menu-admin';
 import Copy from '../../../components/copyright'
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-
 import api from '../../../services/api'
-
+import { toast } from 'react-toastify';
 const useStyles = makeStyles((theme) => ({
   root: {display: 'flex',},
   appBarSpacer: theme.mixins.toolbar,
@@ -30,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   Button: {margin: theme.spacing(1)}
 }));
 
-export default function EntregasListagem() {
+export default function EntregasListagem(props) {
   const classes = useStyles();
 
   const [entregas, setEntregas] = useState([]);
@@ -38,7 +33,6 @@ export default function EntregasListagem() {
   useEffect(()=>{
     async function loadEntregas(){
       await api.get("/entregas").then((response) => {
-        console.log(response)
         setEntregas(response.data);
       });
     }
@@ -49,13 +43,12 @@ export default function EntregasListagem() {
     if(window.confirm("Deseja realmente excluir?")){
       var result = await api.delete('/entregas/'+id);
       if(result.status === 200){
-        window.location.href = '/entregas';
+        window.location.href = "/entregas"
       }else{
-        alert('Ocorreu algum erro, tente novamente!')
+        toast.warn("Ocorreu algum erro, tente novamente!")
       }
     }
   }
-
 
   return (
     <div className={classes.root}>
@@ -79,7 +72,7 @@ export default function EntregasListagem() {
                             <TableCell align="center">Ponto de partida</TableCell>
                             <TableCell align="center">Ponto de destino</TableCell>
                             <TableCell align="center">Data de cadastro</TableCell>
-                            <TableCell align="right">Opções</TableCell>
+                            <TableCell align="center">Opções</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>

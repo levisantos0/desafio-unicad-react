@@ -43,7 +43,7 @@ export default function Entregas_Atualizar(props) {
       setPontoDestino(response.data.pontoDestino);
     }
     getEntrega();
-  },[])
+  },[idEntrega])
 
   const handleSubmit = async ()=>{
     const data = {

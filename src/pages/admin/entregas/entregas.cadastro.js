@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button';
 import MenuAdmin from '../../../components/menu-admin';
 import Copy from '../../../components/copyright'
-
+import { toast } from 'react-toastify';
 import api from '../../../services/api'
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 //Caminho -> http://localhost:3000/entregas/cadastar
 
-export default function EntregasCadastrar() {
+export default function EntregasCadastrar(props) {
   const classes = useStyles();
   const [nomeCliente, setNomeCliente] = useState('');
   const [dataEntrega, setDataEntrega] = useState('');
@@ -41,12 +41,13 @@ export default function EntregasCadastrar() {
       if(nomeCliente!=='' && dataEntrega!=='' && pontoPartida!=='' && pontoDestino!==''){
         const response = await api.post('/entregas',data)
         if(response.status===201){
-          window.location.href='/entregas'
+          toast.success("Entrega cadastrada com sucesso!")
+          props.history.push('/entregas')
         }else{
-          alert('Erro ao cadastrar a entrega!')
+          toast.error("Erro ao cadastrar a entrega!");
         }
       }else{
-        alert('Por favor, preencha todos os dados!')
+        toast.warn('Por favor, preencha todos os dados!')
       }
   }
 
